@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,17 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::get('dinners', 'DinnerController@index');
+Route::get('dinners/{dinner}', 'DinnerController@show');
+Route::post('dinners', 'DinnerController@store');
+Route::put('dinners/{dinner}', 'DinnerController@update');
+Route::delete('dinners/{dinner}', 'DinnerController@destroy');
+
+/*
+|--------------------------------------------------------------------------
+| AUTH Routes
+|--------------------------------------------------------------------------
+|
+ */
+
+Route::post('signup', 'AuthController@register');
