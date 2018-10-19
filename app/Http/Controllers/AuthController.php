@@ -15,9 +15,7 @@ class AuthController extends Controller
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
         $user->save();
-        // zastanowić się jakie dane potrzebuję do rejestracji usera
-        // dodać migrację usera z domyślnymi polami jak rola itp
-        // postmanem sprawdzić rejestrację i logowanie usera
+
         return response()->json(['status' =>  'success', 'data' => $user], 200);
     }
 }
