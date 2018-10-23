@@ -20,6 +20,8 @@ Route::post('dinners', 'DinnerController@store');
 Route::put('dinners/{dinner}', 'DinnerController@update');
 Route::delete('dinners/{dinner}', 'DinnerController@destroy');
 
+Route::get('fix', 'FixController@fix');
+
 /*
 |--------------------------------------------------------------------------
 | AUTH Routes
@@ -28,3 +30,10 @@ Route::delete('dinners/{dinner}', 'DinnerController@destroy');
  */
 
 Route::post('signup', 'AuthController@register');
+Route::post('login', 'AuthController@login');
+
+
+// Route::group(['middleware' => 'jwt.auth'], function() {
+   Route::get('auth/user', 'AuthController@user');
+   Route::post('auth/logout', 'AuthController@logout');
+// });
