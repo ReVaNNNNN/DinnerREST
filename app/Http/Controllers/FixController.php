@@ -10,8 +10,11 @@ class FixController extends Controller
 {
     public function fix()
     {
-        $user = User::find(Auth::id());
+        /** @var User $user */
+        $user = User::find(1);
 
-        var_dump($user);
+        // var_dump($user);
+        echo $user->getEmail();
+        // echo "asdada";
     }
 }

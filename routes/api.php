@@ -29,11 +29,16 @@ Route::get('fix', 'FixController@fix');
 |
  */
 
-Route::post('signup', 'AuthController@register');
+Route::post('register', 'AuthController@register');
 Route::post('login', 'AuthController@login');
+Route::post('refresh', 'AuthController@refresh');
 
 
-// Route::group(['middleware' => 'jwt.auth'], function() {
-   Route::get('auth/user', 'AuthController@user');
-   Route::post('auth/logout', 'AuthController@logout');
-// });
+Route::group(['middleware' => 'jwt.auth'], function() {
+    Route::get('auth/logout', 'AuthController@logout');
+    Route::get('auth/user', 'AuthController@user');
+
+    Route::get('test', function(){
+        return response()->json(['foo'=>'bar']);
+    });
+});
