@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -10,6 +11,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * Class User
  * @property int id
  * @property string email
+ * @property Carbon email_verified_at
+ * @property string password
  */
 
 class User extends Authenticatable
@@ -49,20 +52,54 @@ class User extends Authenticatable
      *
      * @return array
      */
-    public function getJWTCustomClaims()
+    public function getJWTCustomClaims() : array
     {
         return [];
     }
 
-    public function getId()
+    /**
+     * @return int
+     */
+    public function getId() : int
     {
         return $this->id;
     }
 
-    public function getEmail()
+    /**
+     * @return string
+     */
+    public function getEmail() : string
     {
         return $this->email;
     }
 
+    /**
+     * @return Carbon
+     */
+    public function getEmailVerifiedAt() : Carbon
+    {
+        return $this->email_verified_at;
+    }
+
+    /**
+     * @param string $email
+     */
+    public function setEmail(string $email) : void
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * @param string $password
+     */
+    public function setPassword(string $password) : void
+    {
+        $this->password = bcrypt($password);
+    }
+
+    public function setEmailVerifiedAt(Carbon $emailVerifiedAt) : void
+    {
+        $this->email_verified_at = $emailVerifiedAt;
+    }
 
 }
