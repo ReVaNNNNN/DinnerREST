@@ -75,8 +75,12 @@ class AuthController extends Controller
      */
     private function storeVerificationCode(User $user, string $verificationCode) : bool
     {
-        // zapisywane do bazy created i updated times
-        return DB::table('users_verification')->insert(['user_id' => $user->getId(), 'token' => $verificationCode]);
+        return DB::table('users_verification')->insert([
+            'user_id' => $user->getId(),
+            'token' => $verificationCode,
+            'updated_at' => Carbon::now(),
+            'created_at' => Carbon::now()
+        ]);
     }
 
     /**
@@ -97,45 +101,50 @@ class AuthController extends Controller
                     return response()->json(['message' => 'Account already verified..'], 200);
                 }
 
-                $user->update(['email_verified_at' => Carbon::now()]); // dodać metodę do usera ?
-                DB::table('users_verification')->where('token', $verificationCode)->delete(); // wydzielić do osobnej metody
+                $user->setEmailVerifiedAt(Carbon::now());
+                $user->save();
+                $this->removeVerificationCode($verificationCode);
 
-                //dodać response success
+                return response()->json(['status' => 'success', 'message' => 'You have successfully verified your email address.'], 200);
+            } else {
+                throw new \Exception('Verification code is invalid');
             }
-        } catch (ModelNotFoundException $exception) {
-                // uzupełnić
+        } catch (\Exception $exception) {
+            \Log::error($exception->getMessage());
+            return response()->json(['status' => 'error', 'message' => $exception->getMessage()], 500);
         }
 
-        return response(); // dodać response
     }
 
     /**
      * @param string $verificationCode
+     *
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     private function getUserVerificationCode(string $verificationCode)
     {
-        return DB::table('users_verification')->where('token', $verificationCode)->firstOrFail();
+        return DB::table('users_verification')->where('token', $verificationCode)->first();
     }
 
     /**
-     * @param Request $request
+     * @param string $verificationCode
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return int
      */
+    private function removeVerificationCode(string $verificationCode)
+    {
+        return DB::table('users_verification')->where('token', $verificationCode)->delete();
+    }
+
+
     public function login(Request $request)
     {
+        // nowy rodzaj Requesta LoginRequest ?
         $credentials = $request->only('email', 'password');
 
-        if (!$token = JWTAuth::attempt($credentials)) {
-            return response()->json([
-                'status' => 'error',
-                'error' => 'invalid.credentials',
-                'msg' => 'Błędne dane logowania'
-            ], 400);
-        }
 
-        return response()->json(['status' => 'success', 'token' => $token], 200);
+
+        // return response()->json(['status' => 'success', 'token' => $token], 200);
     }
 
     /**

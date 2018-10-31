@@ -76,7 +76,7 @@ class User extends Authenticatable
     /**
      * @return Carbon
      */
-    public function getEmailVerifiedAt() : Carbon
+    public function getEmailVerifiedAt() : ?Carbon
     {
         return $this->email_verified_at;
     }
@@ -97,6 +97,9 @@ class User extends Authenticatable
         $this->password = bcrypt($password);
     }
 
+    /**
+     * @param Carbon $emailVerifiedAt
+     */
     public function setEmailVerifiedAt(Carbon $emailVerifiedAt) : void
     {
         $this->email_verified_at = $emailVerifiedAt;
