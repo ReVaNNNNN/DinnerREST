@@ -105,4 +105,12 @@ class User extends Authenticatable
         $this->email_verified_at = $emailVerifiedAt;
     }
 
+    /**
+     * @return bool
+     */
+    public function checkUserIsVerified() : bool
+    {
+        return $this->email_verified_at ? true : false;
+    }
+
 }

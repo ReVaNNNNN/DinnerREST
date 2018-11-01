@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginFormRequest;
 use App\Http\Requests\RegisterFormRequest;
 use App\User;
 use Carbon\Carbon;
@@ -9,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
@@ -43,7 +44,7 @@ class AuthController extends Controller
      * @param User $user
      * @throws \Exception
      */
-    private function sendEmailWithVerifyCode(User $user)
+    private function sendEmailWithVerifyCode(User $user) : void
     {
         $verificationCode = str_random(30);
 
@@ -131,36 +132,67 @@ class AuthController extends Controller
      *
      * @return int
      */
-    private function removeVerificationCode(string $verificationCode)
+    private function removeVerificationCode(string $verificationCode) : int
     {
         return DB::table('users_verification')->where('token', $verificationCode)->delete();
     }
 
 
-    public function login(Request $request)
-    {
-        // nowy rodzaj Requesta LoginRequest ?
-        $credentials = $request->only('email', 'password');
-
-
-
-        // return response()->json(['status' => 'success', 'token' => $token], 200);
-    }
-
     /**
+     * @param LoginFormRequest $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function logout()
+    public function login(LoginFormRequest $request) : string
     {
-        JWTAuth::invalidate();
+        $credentials = $request->only('email', 'password');
 
-        return response()->json(['status' => 'success', 'msg' => 'Pomyślnie wylogowano'], 200);
+        try {
+            /** @var User $user */
+            $user = User::where('email', $request->input('email'))->first();
+
+            if (!$token = JWTAuth::attempt($credentials)) {
+                return response()->json(
+                    ['status' => 'error', 'message' => 'We cant find an account with this credentials. Please make sure you entered the right information.'],404);
+            } elseif ($user && !$user->checkUserIsVerified()) {
+                return response()->json(
+                    ['status' => 'error', 'message' => 'Your account is not verified. Please check your email and complete verification process.'],404);
+            } else {
+                return response()->json(['status' => 'success', 'token' => $token], 200);
+            }
+        } catch (\Exception $exception) {
+            \Log::error($exception->getMessage());
+            return response()->json(['status' => 'error', 'message' => 'Failed to login, please try again.'], 500);
+        }
     }
 
-    // public function user(Request $request)
-    // {
-    //     $user = User::find(Auth::id());
-    //
-    //     return response()->json(['status' => 'success', 'data' => $user], 200);
-    // }
+
+    /**
+     * @param Request $request
+     *
+     * @return string
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function logout(Request $request) : string
+    {
+        //Problem z wylogowywaniem
+        $this->validate($request, ['token' => 'required']);
+
+        try {
+            JWTAuth::invalidate($request->input('token'));
+            return response()->json(['status' => 'success', 'message' => 'You have successfully logged out.'], 200);
+
+        } catch (\Exception $exception) {
+            \Log::error($exception->getMessage());
+            return response()->json(['status' => 'error', 'message' => 'Failed to logout, please try again.'], 500);
+
+        }
+    }
+
+
+    /**
+     * @todo
+     *  Metoda do odświeżania tokenu
+     */
+
 }

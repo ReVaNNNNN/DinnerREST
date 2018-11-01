@@ -35,8 +35,7 @@ Route::post('refresh', 'AuthController@refresh');
 
 
 Route::group(['middleware' => 'jwt.auth'], function() {
-    Route::get('auth/logout', 'AuthController@logout');
-    Route::get('auth/user', 'AuthController@user');
+    Route::get('logout', 'AuthController@logout');
 
     Route::get('test', function(){
         return response()->json(['foo'=>'bar']);
