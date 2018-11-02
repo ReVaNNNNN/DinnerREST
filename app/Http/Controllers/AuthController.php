@@ -175,7 +175,6 @@ class AuthController extends Controller
      */
     public function logout(Request $request) : string
     {
-        //Problem z wylogowywaniem
         $this->validate($request, ['token' => 'required']);
 
         try {
