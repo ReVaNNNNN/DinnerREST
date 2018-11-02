@@ -54,7 +54,7 @@ class AuthController extends Controller
             throw new \Exception("Error while storing verification code for User: " . $user->getEmail());
         }
 
-        $from = env('MAIL_FROM', 'admin@order.pl');
+        $from = env('MAIL_FROM', 'admin@wybierzobiad.pl');
         $subject = 'Order Dinner - Weryfikacja adresu e-mail.';
         $userEmail = $user->getEmail();
 
