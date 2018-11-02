@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
@@ -54,8 +53,8 @@ class AuthController extends Controller
             throw new \Exception("Error while storing verification code for User: " . $user->getEmail());
         }
 
-        $from = env('MAIL_FROM', 'admin@order.pl');
-        $subject = 'Order Dinner - Weryfikacja adresu e-mail.';
+        $from = env('MAIL_FROM_ADMIN');
+        $subject = 'Wybierz Obiad - Weryfikacja adresu e-mail.';
         $userEmail = $user->getEmail();
 
         Mail::send('email.registration', ['token' =>$verificationCode],
