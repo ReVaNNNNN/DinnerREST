@@ -6,11 +6,15 @@ use App\Http\Requests\LoginFormRequest;
 use App\Http\Requests\RegisterFormRequest;
 use App\User;
 use Carbon\Carbon;
+use Dotenv\Exception\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Password;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Validation\ValidationException as ValidException;
 
 class AuthController extends Controller
 {
@@ -104,8 +108,6 @@ class AuthController extends Controller
                 $user->setEmailVerifiedAt(Carbon::now());
                 $user->save();
                 $this->removeVerificationCode($verificationCode);
-
-                return response()->json(['status' => 'success', 'message' => 'You have successfully verified your email address.'], 200);
             } else {
                 throw new \Exception('Verification code is invalid');
             }
@@ -114,6 +116,7 @@ class AuthController extends Controller
             return response()->json(['status' => 'error', 'message' => $exception->getMessage()], 500);
         }
 
+        return response()->json(['status' => 'success', 'message' => 'You have successfully verified your email address.'], 200);
     }
 
     /**
@@ -156,13 +159,13 @@ class AuthController extends Controller
             } elseif ($user && !$user->checkUserIsVerified()) {
                 return response()->json(
                     ['status' => 'error', 'message' => 'Your account is not verified. Please check your email and complete verification process.'],404);
-            } else {
-                return response()->json(['status' => 'success', 'token' => $token], 200);
             }
         } catch (\Exception $exception) {
             \Log::error($exception->getMessage());
             return response()->json(['status' => 'error', 'message' => 'Failed to login, please try again.'], 500);
         }
+
+        return response()->json(['status' => 'success', 'token' => $token], 200);
     }
 
 
@@ -174,17 +177,44 @@ class AuthController extends Controller
      */
     public function logout(Request $request) : string
     {
-        $this->validate($request, ['token' => 'required']);
+        $this->validate($request, ['token' => 'required']); // do try catcha
 
         try {
             JWTAuth::invalidate($request->input('token'));
-            return response()->json(['status' => 'success', 'message' => 'You have successfully logged out.'], 200);
-
         } catch (\Exception $exception) {
             \Log::error($exception->getMessage());
             return response()->json(['status' => 'error', 'message' => 'Failed to logout, please try again.'], 500);
-
         }
+
+        return response()->json(['status' => 'success', 'message' => 'You have successfully logged out.'], 200);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function resetPassword(Request $request)
+    {
+        try {
+            $this->validate($request, ['email' => 'required']);
+            $email = $request->only('email');
+
+            if (!User::where('email', $email)->first()) {
+                return response()->json(['status' => 'error', 'message' => 'There is no user with given email.'], 401);
+            }
+
+            Password::sendResetLink($email, function (Message $message) {
+                $message->subject('Twój link do resetowania hasła');
+            });
+        } catch (ValidException $exception) {
+            \Log::error($exception->getMessage());
+            return response()->json(['status' => 'error', 'message' => 'There is no address email to reset password.'], 401);
+        } catch (\Exception $exception) {
+            \Log::error($exception->getMessage());
+            return response()->json(['status' => 'error', 'message' => 'Problem while sending reset link.'], 401);
+        }
+
+        return response()->json(['status' => 'success', 'message' => 'A reset email has been sent! Please check your email.'], 200);
     }
 
 
