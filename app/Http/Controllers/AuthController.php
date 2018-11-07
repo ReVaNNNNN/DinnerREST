@@ -173,14 +173,16 @@ class AuthController extends Controller
      * @param Request $request
      *
      * @return string
-     * @throws \Illuminate\Validation\ValidationException
      */
     public function logout(Request $request) : string
     {
-        $this->validate($request, ['token' => 'required']); // do try catcha
-
         try {
+            $this->validate($request, ['token' => 'required']);
+
             JWTAuth::invalidate($request->input('token'));
+        } catch (ValidException $exception) {
+            \Log::error($exception->getMessage());
+            return response()->json(['status' => 'error', 'message' => 'Authorized error. There is no token.'], 401);
         } catch (\Exception $exception) {
             \Log::error($exception->getMessage());
             return response()->json(['status' => 'error', 'message' => 'Failed to logout, please try again.'], 500);
@@ -211,16 +213,9 @@ class AuthController extends Controller
             return response()->json(['status' => 'error', 'message' => 'There is no address email to reset password.'], 401);
         } catch (\Exception $exception) {
             \Log::error($exception->getMessage());
-            return response()->json(['status' => 'error', 'message' => 'Problem while sending reset link.'], 401);
+            return response()->json(['status' => 'error', 'message' => 'Problem while sending reset link.'], 500);
         }
 
         return response()->json(['status' => 'success', 'message' => 'A reset email has been sent! Please check your email.'], 200);
     }
-
-
-    /**
-     * @todo
-     *  Metoda do odświeżania tokenu
-     */
-
 }

@@ -13,14 +13,13 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::get('dinners', 'DinnerController@index');
-Route::get('dinners/{dinner}', 'DinnerController@show');
-Route::post('dinners', 'DinnerController@store');
-Route::put('dinners/{dinner}', 'DinnerController@update');
-Route::delete('dinners/{dinner}', 'DinnerController@destroy');
-
-Route::get('fix', 'FixController@fix');
+Route::group(['middleware' => 'jwt.auth'], function() {
+    Route::get('dinners', 'DinnerController@index');
+    Route::get('dinners/{dinner}', 'DinnerController@show');
+    Route::post('dinners', 'DinnerController@store');
+    Route::put('dinners/{dinner}', 'DinnerController@update');
+    Route::delete('dinners/{dinner}', 'DinnerController@destroy');
+});
 
 /*
 |--------------------------------------------------------------------------
