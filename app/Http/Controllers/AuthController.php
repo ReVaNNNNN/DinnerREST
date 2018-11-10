@@ -6,7 +6,6 @@ use App\Http\Requests\LoginFormRequest;
 use App\Http\Requests\RegisterFormRequest;
 use App\User;
 use Carbon\Carbon;
-use Dotenv\Exception\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Message;
@@ -39,7 +38,7 @@ class AuthController extends Controller
             return response()->json(['status' => 'error', 'message' => $exception->getMessage()], 500);
         }
 
-        return response()->json(['status' =>  'success', 'data' => $user], 200);
+        return response()->json(['status' =>  'success', 'data' => $user], 201);
     }
 
 
