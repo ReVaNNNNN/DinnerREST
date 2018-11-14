@@ -5,6 +5,23 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
+| AUTH Routes
+|--------------------------------------------------------------------------
+|
+ */
+
+Route::post('register', 'AuthController@register');
+Route::post('login', 'AuthController@login');
+Route::post('reset-password', 'AuthController@resetPassword');
+
+
+Route::group(['middleware' => 'jwt.auth'], function() {
+    Route::post('refresh-token', 'AuthController@refresh');
+    Route::get('logout', 'AuthController@logout');
+});
+
+/*
+|--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
 |
@@ -19,21 +36,4 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     Route::post('dinners', 'DinnerController@store');
     Route::put('dinners/{dinner}', 'DinnerController@update');
     Route::delete('dinners/{dinner}', 'DinnerController@destroy');
-});
-
-/*
-|--------------------------------------------------------------------------
-| AUTH Routes
-|--------------------------------------------------------------------------
-|
- */
-
-Route::post('register', 'AuthController@register');
-Route::post('login', 'AuthController@login');
-Route::post('refresh-token', 'AuthController@refresh');
-Route::post('reset-password', 'AuthController@resetPassword');
-
-
-Route::group(['middleware' => 'jwt.auth'], function() {
-    Route::get('logout', 'AuthController@logout');
 });
