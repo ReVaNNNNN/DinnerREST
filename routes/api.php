@@ -9,12 +9,17 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 |
  */
+/*
+ * All Guests
+ */
 
 Route::post('register', 'AuthController@register');
 Route::post('login', 'AuthController@login');
 Route::post('reset-password', 'AuthController@resetPassword');
 
-
+/*
+ * Logged Users
+ */
 Route::group(['middleware' => 'jwt.auth'], function() {
     Route::post('refresh-token', 'AuthController@refresh');
     Route::get('logout', 'AuthController@logout');
@@ -31,9 +36,19 @@ Route::group(['middleware' => 'jwt.auth'], function() {
 |
 */
 Route::group(['middleware' => 'jwt.auth'], function() {
+    /**
+     * Dinners Users Routes
+     */
     Route::get('dinners', 'DinnerController@index');
     Route::get('dinners/{dinner}', 'DinnerController@show');
-    Route::post('dinners', 'DinnerController@store');
-    Route::put('dinners/{dinner}', 'DinnerController@update');
-    Route::delete('dinners/{dinner}', 'DinnerController@destroy');
+
+
+    Route::group(['middleware' => 'isAdmin'], function () {
+        /*
+         * Dinners Admin Routes
+         */
+        Route::post('dinners', 'DinnerController@store');
+        Route::put('dinners/{dinner}', 'DinnerController@update');
+        Route::delete('dinners/{dinner}', 'DinnerController@destroy');
+    });
 });

@@ -13,11 +13,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property string email
  * @property Carbon email_verified_at
  * @property string password
+ * @property int role_id
  */
 
 class User extends Authenticatable
 {
     use Notifiable;
+
+    const ADMIN_ROLE = 1;
 
     /**
      * The attributes that are mass assignable.
@@ -111,6 +114,14 @@ class User extends Authenticatable
     public function checkUserIsVerified() : bool
     {
         return $this->email_verified_at ? true : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin() : bool
+    {
+        return $this->role_id === User::ADMIN_ROLE;
     }
 
 }
