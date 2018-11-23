@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 /*
  * All Guests
  */
-// Route::get('fix', 'FixController@fix');
+Route::get('fix', 'FixController@fix');
 Route::post('register', 'AuthController@register');
 Route::post('login', 'AuthController@login');
 Route::post('reset-password', 'AuthController@resetPassword');
