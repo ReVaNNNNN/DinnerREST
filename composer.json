@@ -39,6 +39,9 @@
     "extra": {
         "laravel": {
             "dont-discover": [
+            ],
+            "providers": [
+                "Barryvdh\\Debugbar\\ServiceProvider"
             ]
         }
     },
