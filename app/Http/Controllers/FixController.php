@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Mail;
 
 class FixController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('jwt.auth');
-    }
+    // public function __construct()
+    // {
+        // $this->middleware('jwt.auth');
+    // }
 
     public function fix()
     {
