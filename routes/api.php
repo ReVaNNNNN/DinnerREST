@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 |
  */
+
 /*
  * All Guests
  */
@@ -39,14 +40,15 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     /**
      * Dinners Users Routes
      */
-    Route::get('dinners', 'DinnerController@index');
-    Route::get('dinners/{dinner}', 'DinnerController@show');
+
 
 
     Route::group(['middleware' => 'isAdmin'], function () {
         /*
          * Dinners Admin Routes
          */
+        Route::get('dinners', 'DinnerController@index');
+        Route::get('dinners/{dinner}', 'DinnerController@show');
         Route::post('dinners', 'DinnerController@store');
         Route::put('dinners/{dinner}', 'DinnerController@update');
         Route::delete('dinners/{dinner}', 'DinnerController@destroy');

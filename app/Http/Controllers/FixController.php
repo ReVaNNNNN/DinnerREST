@@ -17,7 +17,6 @@ class FixController extends Controller
 
     public function fix()
     {
-        // echo "Widzę co tutaj jest";
         return response()->json(['status' => 'success', 'message' => 'Jest git :)'], 200);
     }
 }

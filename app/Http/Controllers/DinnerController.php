@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Dinner;
+use App\Http\Requests\StoreDinnerRequest;
 use Illuminate\Http\Request;
 
 class DinnerController extends Controller
@@ -25,10 +26,10 @@ class DinnerController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param StoreDinnerRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(StoreDinnerRequest $request)
     {
         $dinner = Dinner::create($request->all());
 
