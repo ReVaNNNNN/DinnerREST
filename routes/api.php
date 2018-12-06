@@ -52,5 +52,14 @@ Route::group(['middleware' => 'jwt.auth'], function() {
         Route::post('dinners', 'DinnerController@store');
         Route::put('dinners/{dinner}', 'DinnerController@update');
         Route::delete('dinners/{dinner}', 'DinnerController@destroy');
+
+        /*
+         * Components Admin Routes
+         */
+        Route::get('components', 'ComponenetController@index');
+        Route::get('components/{dinner}', 'ComponenetController@show');
+        Route::post('components', 'ComponenetController@store');
+        Route::put('components/{component}', 'ComponenetController@update');
+        Route::delete('components/{component}', 'ComponenetController@destroy');
     });
 });
