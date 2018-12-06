@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Dinner;
 use App\Http\Requests\StoreDinnerRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use phpDocumentor\Reflection\Types\Array_;
 
 class DinnerController extends Controller
 {
@@ -31,7 +33,9 @@ class DinnerController extends Controller
      */
     public function store(StoreDinnerRequest $request)
     {
-        $dinner = Dinner::create($request->all());
+        /** @var Dinner $dinner */
+        $dinner = Dinner::create($request->only('name', 'category_id', 'restaurant_id', 'price'));
+        $this->addDinnerComponents($request->only('components'), $dinner->getId()); //przy updacie to samo
 
         return response()->json($dinner, 201);
     }
@@ -59,5 +63,16 @@ class DinnerController extends Controller
         $dinner->delete();
 
         return response()->json(null, 204);
+    }
+
+    /**
+     * @param array $components
+     * @param int $dinnerId
+     */
+    private function addDinnerComponents(array $components, int $dinnerId)
+    {
+        foreach ($components as $component) {
+            DB::table('component_dinner')->insert(['component_id' => $component['id'], 'dinner_id' => $dinnerId]);
+        }
     }
 }
