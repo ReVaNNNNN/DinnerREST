@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Dinner extends Model
 {
-    protected $fillable = ['name', 'category_id', 'restaurant_id', 'price', 'photo'];
+    protected $fillable = ['name', 'category_id', 'restaurant_id', 'price', 'photo', 'components'];
 
     /**
      * @return int
@@ -19,5 +19,13 @@ class Dinner extends Model
     public function getId() : int
     {
         return $this->id;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function components()
+    {
+        return $this->belongsToMany(Component::class);
     }
 }

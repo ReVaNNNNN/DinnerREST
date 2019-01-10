@@ -28,7 +28,7 @@ class StoreDinnerRequest extends FormRequest
             'category_id' => 'required|int',
             'restaurant_id' => 'required|int',
             'price' => 'required|between:0,99.99',
-            'components' => 'required|array'
+            'components' => 'required'
         ];
     }
 }

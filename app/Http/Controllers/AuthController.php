@@ -60,7 +60,7 @@ class AuthController extends Controller
         $subject = 'Wybierz Obiad - Weryfikacja adresu e-mail.';
         $userEmail = $user->getEmail();
 
-        Mail::send('email.registration', ['token' =>$verificationCode],
+        Mail::send('email.registration', ['token' => $verificationCode],
             function($mail) use ($from, $userEmail, $subject) {
                 /** @var Mailable $mail */
                 $mail->from($from);

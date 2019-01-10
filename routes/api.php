@@ -56,10 +56,10 @@ Route::group(['middleware' => 'jwt.auth'], function() {
         /*
          * Components Admin Routes
          */
-        Route::get('components', 'ComponenetController@index');
-        Route::get('components/{dinner}', 'ComponenetController@show');
-        Route::post('components', 'ComponenetController@store');
-        Route::put('components/{component}', 'ComponenetController@update');
-        Route::delete('components/{component}', 'ComponenetController@destroy');
+        Route::get('components', 'ComponentController@index');
+        Route::get('components/{dinner}', 'ComponentController@show');
+        Route::post('components', 'ComponentController@store');
+        Route::put('components/{component}', 'ComponentController@update');
+        Route::delete('components/{component}', 'ComponentController@destroy');
     });
 });

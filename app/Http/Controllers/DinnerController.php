@@ -6,7 +6,6 @@ use App\Dinner;
 use App\Http\Requests\StoreDinnerRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use phpDocumentor\Reflection\Types\Array_;
 
 class DinnerController extends Controller
 {
@@ -20,11 +19,13 @@ class DinnerController extends Controller
 
     /**
      * @param Dinner $dinner
-     * @return Dinner
+     * @return array
      */
     public function show(Dinner $dinner)
     {
-        return $dinner;
+        $components = $dinner->components;
+
+        return [$dinner, $components];
     }
 
     /**
@@ -66,13 +67,13 @@ class DinnerController extends Controller
     }
 
     /**
-     * @param array $components
+     * @param $components
      * @param int $dinnerId
      */
-    private function addDinnerComponents(array $components, int $dinnerId)
+    private function addDinnerComponents($components, int $dinnerId)
     {
-        foreach ($components as $component) {
-            DB::table('component_dinner')->insert(['component_id' => $component['id'], 'dinner_id' => $dinnerId]);
+        foreach (explode(',', $components['components']) as $componentId) {
+            DB::table('component_dinner')->insert(['component_id' => $componentId, 'dinner_id' => $dinnerId]);
         }
     }
 }
