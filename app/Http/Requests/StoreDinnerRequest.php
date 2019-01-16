@@ -24,11 +24,11 @@ class StoreDinnerRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|min:4',
+            'name' => 'required|string|min:3',
             'category_id' => 'required|int',
             'restaurant_id' => 'required|int',
             'price' => 'required|between:0,99.99',
-            'components' => 'required'
+            'components' => 'required|array|min:1'
         ];
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Requests\LoginFormRequest;
 use App\Http\Requests\RegisterFormRequest;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Message;
@@ -20,9 +21,9 @@ class AuthController extends Controller
     /**
      * @param RegisterFormRequest $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function register(RegisterFormRequest $request) : string
+    public function register(RegisterFormRequest $request) : JsonResponse
     {
         try {
             $user = new User();
@@ -88,9 +89,9 @@ class AuthController extends Controller
     /**
      * @param string $verificationCode
      *
-     * @return string
+     * @return JsonResponse
      */
-    public function verifyUser(string $verificationCode) : string
+    public function verifyUser(string $verificationCode) : JsonResponse
     {
         try {
             $userVerificationCode = $this->getUserVerificationCode($verificationCode);
@@ -122,7 +123,7 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Database\Eloquent\Model|null
      */
-    private function getUserVerificationCode(string $verificationCode)
+    private function getUserVerificationCode(string $verificationCode) : ?User
     {
         return DB::table('users_verification')->where('token', $verificationCode)->first();
     }
@@ -141,9 +142,9 @@ class AuthController extends Controller
     /**
      * @param LoginFormRequest $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function login(LoginFormRequest $request) : string
+    public function login(LoginFormRequest $request) : JsonResponse
     {
         $credentials = $request->only('email', 'password');
 
@@ -163,16 +164,16 @@ class AuthController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Failed to login, please try again.'], 500);
         }
 
-        return response()->json(['status' => 'success', 'token' => $token], 200);
+        return response()->json(['status' => 'success', 'token' => $token, 'user' => $user], 200);
     }
 
 
     /**
      * @param Request $request
      *
-     * @return string
+     * @return JsonResponse
      */
-    public function logout(Request $request) : string
+    public function logout(Request $request) : JsonResponse
     {
         try {
             $this->validate($request, ['token' => 'required']);
@@ -191,9 +192,10 @@ class AuthController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     *
+     * @return JsonResponse
      */
-    public function resetPassword(Request $request)
+    public function resetPassword(Request $request) : JsonResponse
     {
         try {
             $this->validate($request, ['email' => 'required']);
