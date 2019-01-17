@@ -26,6 +26,6 @@ class Dinner extends Model
      */
     public function components()
     {
-        return $this->belongsToMany(Component::class);
+        return $this->belongsToMany(Component::class, 'component_dinner');
     }
 }

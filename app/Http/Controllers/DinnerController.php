@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Dinner;
 use App\Http\Requests\StoreDinnerRequest;
+use App\Repository\ComponentRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -40,11 +41,17 @@ class DinnerController extends Controller
      */
     public function store(StoreDinnerRequest $request)
     {
+        // ogólne refaktor tutaj
         /** @var Dinner $dinner */
+        if (Dinner::where('name', $request->only('name'))->where('restaurant_id',  $request->only('restaurant_id'))->first()) {
+            return response()->json(['status' => 'error', 'message' => 'Dinner with given name already exists.'], 409);
+        }
+
+        $componentRepo = new ComponentRepository();    //wstrzyknięcie ComponentRepo jako service ?
+        $components = $componentRepo->getOrCreateNewComponents($request->only('components'));
+
         $dinner = Dinner::create($request->only('name', 'category_id', 'restaurant_id', 'price', 'photo'));
-        // naprawić zapisywanie componentów do dinnerów
-        // najpierw stworzyć te dinnery a potem powiązać bo nie ma jeszcze ich ID - poczytać o tym
-        $this->addDinnerComponents($request->only('components'), $dinner->getId()); //przy updacie to samo
+        $dinner->components()->sync($componentRepo->getComponentsIds($components), false);
 
         return response()->json(['status' => 'success', 'dinner' => $dinner], 201);
     }
