@@ -11,7 +11,7 @@ class ComponentRepository
      * @param array $components
      * @return array
      */
-    public function getOrCreateNewComponents(array $components)
+    public function findOrCreateNewComponents(array $components) : array
     {
         $result = [];
 
@@ -26,7 +26,7 @@ class ComponentRepository
      * @param array $components
      * @return array
      */
-    public function getComponentsIds(array $components)
+    public function getComponentsIds(array $components) : array
     {
         $componentsIds = [];
 

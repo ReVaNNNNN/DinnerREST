@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Dinner;
 use App\Http\Requests\StoreDinnerRequest;
 use App\Repository\ComponentRepository;
+use App\Repository\DinnerRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class DinnerController extends Controller
 {
@@ -36,19 +36,20 @@ class DinnerController extends Controller
     }
 
     /**
+     * @param ComponentRepository $componentRepo
+     * @param DinnerRepository $dinnerRepo
      * @param StoreDinnerRequest $request
      * @return JsonResponse
      */
-    public function store(StoreDinnerRequest $request)
+    public function store(ComponentRepository $componentRepo, DinnerRepository $dinnerRepo,  StoreDinnerRequest $request) : JsonResponse
     {
-        // ogólne refaktor tutaj
-        /** @var Dinner $dinner */
-        if (Dinner::where('name', $request->only('name'))->where('restaurant_id',  $request->only('restaurant_id'))->first()) {
+        $dinnerData = $request->only('name', 'restaurant_id');
+
+        if ($dinnerRepo->checkIfDinnerAlreadyExistForGivenRestaurant($dinnerData['name'], $dinnerData['restaurant_id'])) {
             return response()->json(['status' => 'error', 'message' => 'Dinner with given name already exists.'], 409);
         }
 
-        $componentRepo = new ComponentRepository();    //wstrzyknięcie ComponentRepo jako service ?
-        $components = $componentRepo->getOrCreateNewComponents($request->only('components'));
+        $components = $componentRepo->findOrCreateNewComponents($request->only('components'));
 
         $dinner = Dinner::create($request->only('name', 'category_id', 'restaurant_id', 'price', 'photo'));
         $dinner->components()->sync($componentRepo->getComponentsIds($components), false);
@@ -79,18 +80,5 @@ class DinnerController extends Controller
         $dinner->delete();
 
         return response()->json(null, 204);
-    }
-
-    /**
-     * @param $components
-     * @param int $dinnerId
-     */
-    private function addDinnerComponents($components, int $dinnerId)
-    {
-
-        // https://appdividend.com/2018/05/17/laravel-many-to-many-relationship-example/  <---- łaćzenie i usuwanie componentów z dinnerami
-        foreach ($components as $componentId) {
-            DB::table('component_dinner')->insert(['component_id' => $componentId, 'dinner_id' => $dinnerId]);
-        }
     }
 }

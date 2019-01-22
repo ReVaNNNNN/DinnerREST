@@ -11,10 +11,8 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
+Route::get('/', 'Controller@home');
 Route::get('fix', 'FixController@fix');
 
 /**
