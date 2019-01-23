@@ -4,61 +4,63 @@ namespace App\Http\Controllers;
 
 use App\Component;
 use App\Http\Requests\StoreComponentRequest;
+use App\Http\Requests\UpdateComponentRequest;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ComponentController extends Controller
 {
 
-    /**
-     * @return Component[]|\Illuminate\Database\Eloquent\Collection
-     */
-    public function index()
-    {
-        return Component::all();
-    }
 
     /**
+     * @return JsonResponse
+     */
+    public function index() : JsonResponse
+    {
+        $components = Component::all();
+
+        return response()->json(['status' => 'success', 'components' => $components], 200);
+    }
+
+
+    /**
+     * @param int $id
+     *
+     * @return JsonResponse
+     */
+    public function show(int $id) : JsonResponse
+    {
+        $component = Component::find($id);
+
+        return response()->json(['status' => 'success', 'component' => $component], 200);
+    }
+
+
+    /**
+     * @param UpdateComponentRequest $request
      * @param Component $component
-     * @return Component
+     *
+     * @return JsonResponse
      */
-    public function show(Component $component)
-    {
-        return $component;
-    }
-
-    /**
-     * @param StoreComponentRequest $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(StoreComponentRequest $request)
-    {
-        $component = Component::create($request->only('name', 'type'));
-
-        return response()->json($component, 201);
-    }
-
-    /**
-     * @param Request $request
-     * @param Component $component
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(Request $request, Component $component)
+    public function update(UpdateComponentRequest $request, Component $component) : JsonResponse
     {
         $component->update($request->all());
 
-        return response()->json($component, 200);
+        return response()->json(['status' => 'success', 'components' => $component], 200);
     }
 
 
     /**
      * @param Component $component
-     * @return \Illuminate\Http\JsonResponse
+     *
+     * @return JsonResponse
      * @throws \Exception
      */
-    public function destroy(Component $component)
+    public function destroy(Component $component) : JsonResponse
     {
+        $component->dinners()->sync([]);
         $component->delete();
 
-        return response()->json(null, 204);
+        return response()->json(['status' => 'success'], 200);
     }
 }

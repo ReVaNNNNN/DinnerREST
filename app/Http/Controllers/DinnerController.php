@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Dinner;
 use App\Http\Requests\StoreDinnerRequest;
+use App\Http\Requests\UpdateDinnerRequest;
 use App\Repository\ComponentRepository;
 use App\Repository\DinnerRepository;
 use Illuminate\Http\JsonResponse;
@@ -39,6 +40,7 @@ class DinnerController extends Controller
      * @param ComponentRepository $componentRepo
      * @param DinnerRepository $dinnerRepo
      * @param StoreDinnerRequest $request
+     *
      * @return JsonResponse
      */
     public function store(ComponentRepository $componentRepo, DinnerRepository $dinnerRepo,  StoreDinnerRequest $request) : JsonResponse
@@ -52,33 +54,45 @@ class DinnerController extends Controller
         $components = $componentRepo->findOrCreateNewComponents($request->only('components'));
 
         $dinner = Dinner::create($request->only('name', 'category_id', 'restaurant_id', 'price', 'photo'));
-        $dinner->components()->sync($componentRepo->getComponentsIds($components), false);
+        $dinner->components()->sync($componentRepo->getComponentsIds($components));
 
         return response()->json(['status' => 'success', 'dinner' => $dinner], 201);
     }
 
-    /**
-     * @param Request $request
-     * @param Dinner $dinner
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(Request $request, Dinner $dinner)
-    {
-        $dinner->update($request->all());
 
-        return response()->json($dinner, 200);
+    /**
+     * @param ComponentRepository $componentRepo
+     * @param UpdateDinnerRequest $request
+     * @param Dinner $dinner
+     *
+     * @return JsonResponse
+     */
+    public function update(ComponentRepository $componentRepo, UpdateDinnerRequest $request, Dinner $dinner) : JsonResponse
+    {
+        $dinner->update($request->except('components'));
+
+        if ($data = $request->only('components')) {
+            $components = $componentRepo->findOrCreateNewComponents($data);
+            $dinner->components()->sync($componentRepo->getComponentsIds($components));
+        }
+
+        $dinner = Dinner::with('components')->find($dinner->getId());
+
+        return response()->json(['status' => 'success', 'dinner' => $dinner], 200);
     }
 
 
     /**
      * @param Dinner $dinner
-     * @return \Illuminate\Http\JsonResponse
+     *
+     * @return JsonResponse
      * @throws \Exception
      */
-    public function destroy(Dinner $dinner)
+    public function destroy(Dinner $dinner) : JsonResponse
     {
+        $dinner->components()->sync([]);
         $dinner->delete();
 
-        return response()->json(null, 204);
+        return response()->json(['status' => 'success'], 200);
     }
 }
