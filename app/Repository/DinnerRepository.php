@@ -10,6 +10,7 @@ class DinnerRepository
     /**
      * @param string $dinnerName
      * @param int $restaurantId
+     *
      * @return bool
      */
     public function checkIfDinnerAlreadyExistForGivenRestaurant(string $dinnerName, int $restaurantId) : bool

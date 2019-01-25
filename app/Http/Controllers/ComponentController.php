@@ -37,20 +37,6 @@ class ComponentController extends Controller
 
 
     /**
-     * @param UpdateComponentRequest $request
-     * @param Component $component
-     *
-     * @return JsonResponse
-     */
-    public function update(UpdateComponentRequest $request, Component $component) : JsonResponse
-    {
-        $component->update($request->all());
-
-        return response()->json(['status' => 'success', 'components' => $component], 200);
-    }
-
-
-    /**
      * @param Component $component
      *
      * @return JsonResponse

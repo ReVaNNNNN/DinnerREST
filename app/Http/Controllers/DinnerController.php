@@ -31,9 +31,7 @@ class DinnerController extends Controller
      */
     public function show(Dinner $dinner) : JsonResponse
     {
-        $dinner = Dinner::with('components')->find($dinner->getId());
-
-        return response()->json(['status' => 'success', 'dinner' => $dinner], 200);
+        return response()->json(['status' => 'success', 'dinner' => $dinner->getWithComponents()], 200);
     }
 
     /**
@@ -53,10 +51,11 @@ class DinnerController extends Controller
 
         $components = $componentRepo->findOrCreateNewComponents($request->only('components'));
 
+        /** @var Dinner $dinner */
         $dinner = Dinner::create($request->only('name', 'category_id', 'restaurant_id', 'price', 'photo'));
         $dinner->components()->sync($componentRepo->getComponentsIds($components));
 
-        return response()->json(['status' => 'success', 'dinner' => $dinner], 201);
+        return response()->json(['status' => 'success', 'dinner' => $dinner->getWithComponents()], 201);
     }
 
 
@@ -76,9 +75,7 @@ class DinnerController extends Controller
             $dinner->components()->sync($componentRepo->getComponentsIds($components));
         }
 
-        $dinner = Dinner::with('components')->find($dinner->getId());
-
-        return response()->json(['status' => 'success', 'dinner' => $dinner], 200);
+        return response()->json(['status' => 'success', 'dinner' => $dinner->getWithComponents()], 200);
     }
 
 
