@@ -8,7 +8,6 @@ use App\Http\Requests\UpdateDinnerRequest;
 use App\Repository\ComponentRepository;
 use App\Repository\DinnerRepository;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class DinnerController extends Controller
 {

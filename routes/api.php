@@ -61,5 +61,11 @@ Route::group(['middleware' => 'jwt.auth'], function() {
         Route::post('components', 'ComponentController@store');
         Route::put('components/{component}', 'ComponentController@update');
         Route::delete('components/{component}', 'ComponentController@destroy');
+
+        /**
+         * Menu Admin Routes
+         */
+        Route::get('menu', 'MenuController@show');
+        Route::post('menu', 'MenuController@store');
     });
 });

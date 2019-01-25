@@ -29,6 +29,11 @@ class Dinner extends Model
         return $this->belongsToMany(Component::class, 'component_dinner');
     }
 
+    public function menu()
+    {
+        return $this->belongsToMany(Menu::class, 'dinner_menu');
+    }
+
     public function getWithComponents()
     {
         return Dinner::with('components')->find($this->getId());
