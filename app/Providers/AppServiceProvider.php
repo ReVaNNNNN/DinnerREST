@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Repository\ComponentRepository;
 use App\Repository\DinnerRepository;
+use App\Repository\MenuRepository;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -28,5 +29,6 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(ComponentRepository::class);
         $this->app->bind(DinnerRepository::class);
+        $this->app->bind(MenuRepository::class);
     }
 }

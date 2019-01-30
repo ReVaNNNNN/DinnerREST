@@ -24,7 +24,9 @@ class StoreMenuRequest extends FormRequest
     public function rules()
     {
         return [
-            // musza byc dokladnie 3 obiady : czyli 3 elementy w tablicy
+            'restaurant_id' => 'required|int',
+            'date' => 'required|date',
+            'dinners' => 'required|array|between:3,3',
         ];
     }
 }
