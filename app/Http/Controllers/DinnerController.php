@@ -48,7 +48,12 @@ class DinnerController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Dinner with given name already exists.'], 409);
         }
 
-        $components = $componentRepo->findOrCreateNewComponents($request->only('components'));
+        try {
+            $components = $componentRepo->findOrCreateNewComponents($request->only('components'));
+        } catch (\Exception $e) {
+            \Log::error('Error while storing dinner: ' . $e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 400);
+        }
 
         /** @var Dinner $dinner */
         $dinner = Dinner::create($request->only('name', 'category_id', 'restaurant_id', 'price', 'photo'));

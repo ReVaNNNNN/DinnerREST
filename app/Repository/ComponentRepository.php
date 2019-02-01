@@ -7,16 +7,19 @@ use App\Component;
 
 class ComponentRepository
 {
+
     /**
      * @param array $components
+     *
      * @return array
+     * @throws \Exception
      */
     public function findOrCreateNewComponents(array $components) : array
     {
         $result = [];
 
         foreach ($components['components'] as $component) {
-            $result[] = Component::where('name', $component['name'])->first() ?: Component::create($component);
+            $result[] = Component::where('name', $component['name'])->first() ?: $this->createNewComponent($component);
         }
 
         return $result;
@@ -35,5 +38,20 @@ class ComponentRepository
         }
 
         return $componentsIds;
+    }
+
+    /**
+     * @param array $component
+     *
+     * @return Component
+     * @throws \Exception
+     */
+    public function createNewComponent(array $component)
+    {
+        if (!in_array($component['type'], Component::ALLOWED_TYPES)) {
+            throw new \Exception('Not allowed component type: ' . $component['type']);
+        }
+
+        return Component::create($component);
     }
 }
