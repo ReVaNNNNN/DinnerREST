@@ -12,7 +12,7 @@ return [
     */
 
     'Wagon' => [
-        'domain' => env('MAILGUN_DOMAIN'),
+        // 'domain' => env('MAILGUN_DOMAIN'),
     ],
 
 ];

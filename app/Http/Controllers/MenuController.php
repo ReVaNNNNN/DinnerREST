@@ -32,7 +32,7 @@ class MenuController extends Controller
     public function store(MenuRepository $menuRepo, StoreMenuRequest $request) : JsonResponse
     {
         /** @var Menu $menu */
-        $menu = Menu::create($request->only('restaurant_id', 'date'));
+        $menu = $menuRepo->createMenu($request);
         $menu->dinners()->sync($menuRepo->getDinnersIds($request->only('dinners')));
 
         return response()->json(['status' => 'success', 'menu' => $menu], 201);
