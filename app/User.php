@@ -41,6 +41,14 @@ class User extends Authenticatable
     ];
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class, 'user_order');
+    }
+
+    /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
      * @return mixed

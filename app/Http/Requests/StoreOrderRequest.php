@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreMenuRequest extends FormRequest
+class StoreOrderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class StoreMenuRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->isAdmin();
+        return false;
     }
 
     /**
@@ -24,9 +24,8 @@ class StoreMenuRequest extends FormRequest
     public function rules()
     {
         return [
-            'restaurant_id' => 'required|int',
+            'user_id' => 'required|int',
             'dinners' => 'required|array',
-            'date' => 'date',
         ];
     }
 }
