@@ -37,35 +37,35 @@ Route::group(['middleware' => 'jwt.auth'], function() {
 |
 */
 Route::group(['middleware' => 'jwt.auth'], function() {
+
     /**
-     * Dinners Users Routes
+     * Users Routes
      */
+    Route::group(['prefix' => 'user'], function () {
+        Route::get('orders', 'OrderController@userOrder');
+        Route::post('orders', 'OrderController@store');
+    });
 
 
-
-    Route::group(['middleware' => 'isAdmin'], function () {
-        /*
-         * Dinners Admin Routes
-         */
+    /*
+     * Admin Routes
+     */
+    Route::group(['middleware' => 'isAdmin', 'prefix' => 'admin'], function () {
         Route::get('dinners', 'DinnerController@index');
         Route::get('dinners/{dinner}', 'DinnerController@show');
         Route::post('dinners', 'DinnerController@store');
         Route::put('dinners/{dinner}', 'DinnerController@update');
         Route::delete('dinners/{dinner}', 'DinnerController@destroy');
 
-        /*
-         * Components Admin Routes
-         */
         Route::get('components', 'ComponentController@index');
         Route::get('components/{component}', 'ComponentController@show');
         Route::post('components', 'ComponentController@store');
         Route::put('components/{component}', 'ComponentController@update');
         Route::delete('components/{component}', 'ComponentController@destroy');
 
-        /**
-         * Menu Admin Routes
-         */
         Route::get('menu', 'MenuController@show');
         Route::post('menu', 'MenuController@store');
+
+        Route::get('orders', 'OrderController@index');
     });
 });

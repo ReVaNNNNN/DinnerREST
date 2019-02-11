@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Dinner
- * @property int id
+ *
+ * @property int $id
  */
-
 class Dinner extends Model
 {
     protected $fillable = ['name', 'category_id', 'restaurant_id', 'price', 'photo', 'components'];
