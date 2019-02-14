@@ -20,7 +20,7 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    const ADMIN_ROLE = 1;
+    const ADMIN_ROLE_ID = 1;
 
     /**
      * The attributes that are mass assignable.
@@ -40,13 +40,6 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function orders()
-    {
-        return $this->belongsToMany(Order::class, 'user_order');
-    }
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
@@ -129,7 +122,7 @@ class User extends Authenticatable
      */
     public function isAdmin() : bool
     {
-        return $this->role_id === User::ADMIN_ROLE;
+        return $this->role_id === User::ADMIN_ROLE_ID;
     }
 
 }

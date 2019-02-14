@@ -42,7 +42,7 @@ Route::group(['middleware' => 'jwt.auth'], function() {
      * Users Routes
      */
     Route::group(['prefix' => 'user'], function () {
-        Route::get('orders', 'OrderController@userOrder');
+        Route::get('order/{userId}', 'OrderController@userOrder');
         Route::post('orders', 'OrderController@store');
     });
 
