@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Order;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Mailable;
@@ -10,13 +11,11 @@ use Illuminate\Support\Facades\Mail;
 
 class FixController extends Controller
 {
-    // public function __construct()
-    // {
-        // $this->middleware('jwt.auth');
-    // }
 
     public function fix()
     {
-        return response()->json(['status' => 'success', 'message' => 'Jest git :)'], 200);
+        // $order = User::find(24);
+        //
+        // dd($order->orders()->get());
     }
 }

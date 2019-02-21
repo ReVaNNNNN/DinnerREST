@@ -19,9 +19,7 @@ class OrderController extends Controller
      */
     public function index() : JsonResponse
     {
-        $orders = Order::with('dinners')
-            ->whereDate('created_at', '=', Carbon::today()->format('Y-m-d'))
-            ->get();
+        $orders = $this->getTodayOrders();
 
         return response()->json(['status' => 'success', 'orders' => $orders], 200);
     }
@@ -33,12 +31,9 @@ class OrderController extends Controller
      *
      * @return JsonResponse
      */
-    public function userOrder(int $userId) : JsonResponse
+    public function showUserOrder(int $userId) : JsonResponse
     {
-        $order = Order::with('dinners')
-            ->where('user_id', '=', $userId)
-            ->whereDate('created_at', '=', Carbon::today()->format('Y-m-d'))
-            ->first();
+        $order = $this->getTodayOrders($userId);
 
         return response()->json(['status' => 'success', 'order' => $order], 200);
     }
@@ -57,5 +52,32 @@ class OrderController extends Controller
         $orderInfo = Order::with('dinners')->find($order->getId());
 
         return response()->json(['status' => 'success', 'order' => $orderInfo], 201);
+    }
+
+    /**
+     * @param Order $order
+     *
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function destroy(Order $order) : JsonResponse
+    {
+        $order->dinners()->sync([]);
+        $order->delete();
+
+        return response()->json(['status' => 'success'], 200);
+    }
+
+    /**
+     * @param int|null $userId
+     * @return Order|Order[]|null
+     */
+    private function getTodayOrders(int $userId = null)
+    {
+        $order = Order::with('dinners')
+            ->whereDate('created_at', '=', Carbon::today()->format('Y-m-d'));
+
+
+        return $userId ? $order->where('user_id', '=', $userId)->first() : $order->get();
     }
 }
