@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreOrderRequest;
 use App\Order;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -24,50 +23,7 @@ class OrderController extends Controller
         return response()->json(['status' => 'success', 'orders' => $orders], 200);
     }
 
-    /**
-     * Show today's user order
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function showUserOrder(int $userId) : JsonResponse
-    {
-        $order = $this->getTodayOrders($userId);
-
-        return response()->json(['status' => 'success', 'order' => $order], 200);
-    }
-
-    /**
-     * @param StoreOrderRequest $request
-     *
-     * @return JsonResponse
-     */
-    public function store(StoreOrderRequest $request) : JsonResponse
-    {
-        /** @var Order $order */
-        $order = Order::create($request->only('user_id'));
-        $order->dinners()->sync($request->only('dinners')['dinners']);
-
-        $orderInfo = Order::with('dinners')->find($order->getId());
-
-        return response()->json(['status' => 'success', 'order' => $orderInfo], 201);
-    }
-
-    /**
-     * @param Order $order
-     *
-     * @return JsonResponse
-     * @throws \Exception
-     */
-    public function destroy(Order $order) : JsonResponse
-    {
-        $order->dinners()->sync([]);
-        $order->delete();
-
-        return response()->json(['status' => 'success'], 200);
-    }
-
+    //@todo Wydzielić do Traita
     /**
      * @param int|null $userId
      * @return Order|Order[]|null

@@ -94,26 +94,33 @@ class User extends Authenticatable
 
     /**
      * @param string $email
+     * @return User
      */
-    public function setEmail(string $email) : void
+    public function setEmail(string $email) : User
     {
         $this->email = $email;
+        return $this;
     }
 
     /**
      * @param string $password
+     * @return User
      */
-    public function setPassword(string $password) : void
+    public function setPassword(string $password) : User
     {
         $this->password = bcrypt($password);
+        return $this;
     }
+
 
     /**
      * @param Carbon $emailVerifiedAt
+     * @return User
      */
-    public function setEmailVerifiedAt(Carbon $emailVerifiedAt) : void
+    public function setEmailVerifiedAt(Carbon $emailVerifiedAt) : User
     {
         $this->email_verified_at = $emailVerifiedAt;
+        return $this;
     }
 
     /**

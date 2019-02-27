@@ -104,8 +104,7 @@ class AuthController extends Controller
                     return response()->json(['message' => 'Account already verified..'], 200);
                 }
 
-                $user->setEmailVerifiedAt(Carbon::now());
-                $user->save();
+                $user->setEmailVerifiedAt(Carbon::now())->save();
                 $this->removeVerificationCode($verificationCode);
             } else {
                 throw new \Exception('Verification code is invalid');
