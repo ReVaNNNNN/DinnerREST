@@ -3,15 +3,17 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Traits\OrderTrait;
 use App\Http\Requests\StoreOrderRequest;
 use App\Order;
 use Auth;
-use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
+    use OrderTrait;
+
     /**
      * Show today's user order
      *
@@ -60,18 +62,5 @@ class OrderController extends Controller
         }
 
         return response()->json(['status' => 'error', 'message' => 'An unauthorized user for this action'], 403);
-    }
-
-    /**
-     * @param int|null $userId
-     * @return Order|Order[]|null
-     */
-    private function getTodayOrders(int $userId = null)
-    {
-        $order = Order::with('dinners')
-            ->whereDate('created_at', '=', Carbon::today()->format('Y-m-d'));
-
-
-        return $userId ? $order->where('user_id', '=', $userId)->first() : $order->get();
     }
 }

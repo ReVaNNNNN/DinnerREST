@@ -42,6 +42,8 @@ Route::group(['middleware' => 'jwt.auth'], function() {
      * Users Routes
      */
     Route::group(['prefix' => 'user'], function () {
+        Route::get('menu', 'User\MenuController@show');
+
         Route::get('order/{userId}', 'User\OrderController@show');
         Route::post('orders', 'User\OrderController@store');
         Route::delete('orders/{order}', 'User\OrderController@destroy');

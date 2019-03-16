@@ -3,27 +3,15 @@
 namespace App\Http\Controllers;
 
 
+use App\Http\Controllers\Traits\MenuTrait;
 use App\Http\Requests\StoreMenuRequest;
 use App\Menu;
 use App\Repository\MenuRepository;
-use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 
 class MenuController extends Controller
 {
-    /**
-     * Show today's menu
-     * @return JsonResponse
-     */
-    public function show() : JsonResponse
-    {
-        $menu = Menu::with('dinners')
-            ->where('date','>=',Carbon::now()->startOfDay())
-            ->where('date','<=',Carbon::now()->endOfDay())
-            ->first();
-
-        return response()->json(['status' => 'success', 'menu' => $menu], 200);
-    }
+    use MenuTrait;
 
     /**
      * @param StoreMenuRequest $request
