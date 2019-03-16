@@ -4,7 +4,6 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
@@ -19,8 +18,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     use Notifiable;
-
-    const ADMIN_ROLE_ID = 1;
 
     /**
      * The attributes that are mass assignable.
@@ -136,7 +133,7 @@ class User extends Authenticatable
      */
     public function isAdmin() : bool
     {
-        return $this->role_id === User::ADMIN_ROLE_ID;
+        return $this->role_id === Role::ADMIN;
     }
 
 }

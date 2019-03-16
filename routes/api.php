@@ -54,6 +54,8 @@ Route::group(['middleware' => 'jwt.auth'], function() {
      * Admin Routes
      */
     Route::group(['middleware' => 'isAdmin', 'prefix' => 'admin'], function () {
+        Route::get('users/registered', 'UserController@registeredUsers');
+
         Route::get('dinners', 'DinnerController@index');
         Route::get('dinners/{dinner}', 'DinnerController@show');
         Route::post('dinners', 'DinnerController@store');
