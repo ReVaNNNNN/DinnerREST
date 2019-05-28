@@ -81,7 +81,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Werner Heisenberg
+                    Werner Heisenberg :-)
                 </div>
 
                 <div class="links">
