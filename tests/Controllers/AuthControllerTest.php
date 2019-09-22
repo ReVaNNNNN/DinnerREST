@@ -17,15 +17,14 @@ class AuthControllerTest extends TestCase
         $this->withoutExceptionHandling();
 
         $email = $this->faker->email;
-        $password = $this->faker->password;
+        $pass = $this->faker->password;
 
         $payload = [
             'email' => $email,
-            'password' => $password
+            'password' => $pass
         ];
 
         $this->post('/api/register', $payload);
-
         $this->assertDatabaseHas('users', ['email' => $email]);
     }
 }
