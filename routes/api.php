@@ -49,7 +49,6 @@ Route::group(['middleware' => 'jwt.auth'], function() {
         Route::delete('orders/{order}', 'User\OrderController@destroy');
     });
 
-
     /*
      * Admin Routes
      */
