@@ -19,7 +19,7 @@ class Order extends Model
     /**
      * @return BelongsToMany
      */
-    public function dinners() : BelongsToMany
+    public function dinners(): BelongsToMany
     {
         return $this->belongsToMany(Dinner::class, 'order_dinner');
     }
@@ -27,7 +27,7 @@ class Order extends Model
     /**
      * @return int
      */
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -35,7 +35,7 @@ class Order extends Model
     /**
      * @return BelongsTo
      */
-    public function user() : BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo('App\User');
     }
