@@ -16,11 +16,14 @@ class Menu extends Model
     /**
      * @return int
      */
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
+    /**
+    * @return Dinner
+    */
     public function dinners()
     {
         return $this->belongsToMany(Dinner::class, 'dinner_menu');
