@@ -1,4 +1,4 @@
-# Dinner REST
+# Order Dinner REST API
 
 This is project used to help order dinners in local restaurant. 
 The basic strategy was separate backend and frontend.
