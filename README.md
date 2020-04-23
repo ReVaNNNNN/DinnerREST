@@ -1,6 +1,6 @@
 # Order Dinner REST API
 
-This is project used to help order dinners in local restaurant. 
+Project is used to help order dinners in local restaurants. 
 The basic strategy was separate backend and frontend.
-Backed is writting in PHP - Laravel, and froneted is writting in Angular 4. 
+Backed is writting with PHP - Laravel, and frontend is writting with Angular 4. 
 The connection beetween them uses stadard REST API.
