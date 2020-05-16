@@ -111,7 +111,7 @@ class AuthController extends Controller
             }
         } catch (\Exception $exception) {
             \Log::error($exception->getMessage());
-            return response()->json(['status' => 'error', 'message' => $exception->getMessage()], 500);
+            return response()->json(['status' => 'error', 'message' => $exception->getMessage()], 404);
         }
 
         return response()->json(['status' => 'success', 'message' => 'You have successfully verified your email address.'], 200);
@@ -153,10 +153,10 @@ class AuthController extends Controller
 
             if (!$token = JWTAuth::attempt($credentials)) {
                 return response()->json(
-                    ['status' => 'error', 'message' => 'We cant find an account with this credentials. Please make sure you entered the right information.'],404);
+                    ['status' => 'error', 'message' => 'We can\'t find an account with this credentials. Please make sure you entered the right information.'], 404);
             } elseif ($user && !$user->checkUserIsVerified()) {
                 return response()->json(
-                    ['status' => 'error', 'message' => 'Your account is not verified. Please check your email and complete verification process.'],404);
+                    ['status' => 'error', 'message' => 'Your account is not verified. Please check your email and complete verification process.'], 404);
             }
         } catch (\Exception $exception) {
             \Log::error($exception->getMessage());
