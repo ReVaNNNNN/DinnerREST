@@ -1,6 +1,6 @@
 # Order Dinner REST API
 
-Project is used to help order dinners in local restaurants. 
+Project is used to help Order Dinners in local restaurants. 
 
 The basic strategy was to separate backend and frontend technology.
 
